@@ -1,6 +1,7 @@
 const BLACK = 1, WHITE = -1, DEBUG = 1;
 var playerColor = BLACK; //default is black
 var playerTurn = true;
+var pawnCount = 0;
 var board = [ 
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -33,13 +34,17 @@ $("table").on("click", "td", function(){
         board[row][col] = playerColor;
         console.log(board);
         add(playerColor, $(this).attr("id"));
+        pawnCount++;
         
         //checkWinner condition
         if (checkWinner(playerColor, row, col)) {
             alert("You WIN! Congrats!");
-            reset();
         } else {
-            aiMove();
+            if (pawnCount === 225) {
+                alert("Oops, it's a draw.");
+            } else {
+                aiMove();
+            }
         }
 
         
@@ -63,6 +68,7 @@ function reset() {
         board[7][7] = BLACK;
     }
     playerTurn = true;
+    pawnCount = 0;
 }
 
 function add(color, id) {
@@ -77,15 +83,19 @@ function aiMove() {
     var worker = new Worker("../scripts/ai.js");
 
     worker.onmessage = function(event) {
+        pawnCount++;
         add(-playerColor, event.data);
         let indexArr = event.data.split("i");
         let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
         board[row][col] = -playerColor;
         if (checkWinner(-playerColor, row, col)) {
             alert("You LOOSE! Oops!");
-            reset();
         } else {
-            playerTurn = true;
+            if (pawnCount === 225) {
+                alert("Oops, it's a draw.");
+            } else {
+                playerTurn = true;
+            }
         }
     }
 
