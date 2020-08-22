@@ -2,7 +2,7 @@ var cacheBoard = new Map();
 var cpuColor = 0;
 var boardIndexArray = [...Array(225).keys()];
 const dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
-const BLACK = 1, WHITE = -1, MAX_DEPTH = 3;
+const BLACK = 1, WHITE = -1, MAX_DEPTH = 5;
 
 var test = [ 
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -28,13 +28,7 @@ onmessage = (event) => {
 }
 
 function calculateMove(board, aiColor, pawnCount) {
-    /*console.log("heuristic score = ", heuristic(test, WHITE));
-    for (let i = 0; i < 15; i++) {
-        for (let j = 0; j < 15; j++) {
-            if (board[i][j] == 0) return i + "i" + j;
-        }
-    }
-    return "-1i-1";*/
+    /*console.log("heuristic score = ", heuristic(test, WHITE));*/
     
     //shuffle the board Index array to add randomness
     shuffle(boardIndexArray);
@@ -42,22 +36,8 @@ function calculateMove(board, aiColor, pawnCount) {
     cpuColor = aiColor;
     let depth = 225 - pawnCount >= MAX_DEPTH ? MAX_DEPTH : 225 - pawnCount;
 
-    let maxScore = -Infinity;
-    let bestMove = [-1, -1];
-    for (let it = 0; it < 225; it++) {
-        let i = Math.floor(boardIndexArray[it] / 15), j = boardIndexArray[it] % 15;
-        if (board[i][j] == 0 && checkAfinity(board, i, j)) {
-
-            board[i][j] = cpuColor;
-            let curScore = alphabetaMinimax(board, 0, -Infinity, Infinity, 1); //TODO: add depth
-            if (curScore > maxScore) {
-                maxScore = curScore;
-                bestMove = [i, j];
-            }
-            board[i][j] = 0;
-        }
-    }
-    return bestMove[0] + "i" + bestMove[1];
+    let res = alphabetaMinimax(board, depth, -Infinity, Infinity, 1); 
+    return res[1] + "i" + res[2];
 }
 
 function checkAfinity(board, row, col) {
@@ -69,8 +49,48 @@ function checkAfinity(board, row, col) {
 }
 
 function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notCpu : -1
-    if (depth == 0) return cpuColor * heuristic(board, isCpu * cpuColor);
-    return 0; //TODO: add logic
+    if (depth == 0) return [cpuColor * heuristic(board, isCpu * cpuColor), -1, -1];
+                            //make heuristic relative to cpu
+    if (isCpu == 1) {
+        let maxScore = -Infinity;
+        let bestMove = [-1, -1];
+        //let moveCount = 0;  //for debug purpose
+        for (let i = 0; i < 225; i++) {
+            let row = Math.floor(boardIndexArray[i] / 15), col = boardIndexArray[i] % 15;
+            if (board[row][col] == 0 && checkAfinity(board, row, col)) {
+                //moveCount++;
+                //if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);
+                board[row][col] = cpuColor;
+                let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
+                if (curScore > maxScore) {
+                    maxScore = curScore;
+                    bestMove = [row, col];
+                }
+                board[row][col] = 0;
+                alpha = Math.max(alpha, maxScore);
+                if (alpha >= beta) break;
+            }
+        }
+        return [maxScore, bestMove[0], bestMove[1]];
+    } else {
+        let minScore = Infinity;
+        let bestMove = [-1, -1];
+        for (let i = 0; i < 225; i++) {
+            let row = Math.floor(boardIndexArray[i] / 15), col = boardIndexArray[i] % 15;
+            if (board[row][col] == 0 && checkAfinity(board, row, col)) {
+                board[row][col] = -cpuColor;
+                let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
+                if (curScore < minScore) {
+                    minScore = curScore;
+                    bestMove = [row, col];
+                }
+                board[row][col] = 0;
+                beta = Math.min(beta, minScore);
+                if (alpha >= beta) break;
+            }
+        }
+        return [minScore, bestMove[0], bestMove[1]];
+    }
 }
 
 // return evaluation score for BLACK
