@@ -1,5 +1,6 @@
 var cacheBoard = new Map();
-var dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
+var cpuColor = 0;
+const dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
 const BLACK = 1, WHITE = -1, MAX_DEPTH = 3;
 
 var test = [ 
@@ -25,21 +26,50 @@ onmessage = (event) => {
     postMessage(calculateMove(event.data.board, event.data.color, event.data.pawnCount));
 }
 
-function calculateMove(board, cpuColor, pawnCount) {
-    /*console.log("heuristic score = ", heuristics(test, WHITE));
+function calculateMove(board, aiColor, pawnCount) {
+    /*console.log("heuristic score = ", heuristic(test, WHITE));
     for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
             if (board[i][j] == 0) return i + "i" + j;
         }
     }
     return "-1i-1";*/
+    cpuColor = aiColor;
     let depth = 225 - pawnCount >= MAX_DEPTH ? MAX_DEPTH : 225 - pawnCount;
+
+    let maxScore = -Infinity;
+    let bestMove = [-1, -1];
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            if (board[i][j] == 0 && checkAfinity(board, i, j)) {
+                board[i][j] = cpuColor;
+                let curScore = alphabetaMinimax(board, 0, -Infinity, Infinity, 1); //TODO: add depth
+                if (curScore > maxScore) {
+                    maxScore = curScore;
+                    bestMove = [i, j];
+                }
+                board[i][j] = 0;
+            }
+        }
+    }
+    return bestMove[0] + "i" + bestMove[1];
 }
 
-function alphabetaMinimax()
+function checkAfinity(board, row, col) {
+    for (let i = 0; i < dir.length; i++) {
+        if (row + dir[i][0] >= 0 && col + dir[i][1] >= 0 && row + dir[i][0] < 15 && col + dir[i][1] < 15) {
+            if (board[row+dir[i][0]][col+dir[i][1]] != 0) return true;
+        }
+    }
+}
+
+function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notCpu : -1
+    if (depth == 0) return cpuColor * heuristic(board, isCpu * cpuColor);
+    return 0; //TODO: add logic
+}
 
 // return evaluation score for BLACK
-function heuristics(board, colorTurn) { 
+function heuristic(board, colorTurn) { 
     let boardStr = board.join("");
     if (cacheBoard.has(boardStr)) return cacheBoard.get(boardStr); //check cache
 
@@ -311,4 +341,3 @@ function calculateScore(isThisTurn, countArr) {
     }
     return score;
 }
-
