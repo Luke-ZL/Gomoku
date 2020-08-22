@@ -73,7 +73,7 @@ function reset() {
 
 function add(color, id) {
     if (color === BLACK) {
-       $("#" + id).addClass("blackPawn");  // certainid which includes ' ', '.' etc. needs to be escaped, so I use 'i' as delim
+       $("#" + id).addClass("blackPawn");  //certain id which includes ' ', '.' etc. needs to be escaped, so I use 'i' as delim
     } else {
         $("#" + id).addClass("whitePawn");
     }
@@ -101,7 +101,8 @@ function aiMove() {
 
     var data = {
         "board": board,
-        'color': -playerColor
+        "color": -playerColor,
+        "pawnCount": pawnCount
     };
     worker.postMessage(data);
 }
