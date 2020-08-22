@@ -1,8 +1,10 @@
+//TODO check affinity first
+
 var cacheBoard = new Map();
 var cpuColor = 0;
 var boardIndexArray = [...Array(225).keys()];
-const dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
-const BLACK = 1, WHITE = -1, MAX_DEPTH = 5;
+var dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
+const BLACK = 1, WHITE = -1, MAX_DEPTH = 4;
 
 onmessage = (event) => {
     postMessage(calculateMove(event.data.board, event.data.color, event.data.pawnCount));
@@ -40,6 +42,12 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
                 moveCount++;                                                            //for debug purpose
                 if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);   //for debug purpose
                 board[row][col] = cpuColor;
+
+                if (checkWinner(board, row, col)) {
+                    board[row][col] = 0;
+                    return [1000000, row, col];
+                }
+
                 let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
                 if (curScore > maxScore) {
                     maxScore = curScore;
@@ -58,6 +66,12 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
             let row = Math.floor(boardIndexArray[i] / 15), col = boardIndexArray[i] % 15;
             if (board[row][col] == 0 && checkAfinity(board, row, col)) {
                 board[row][col] = -cpuColor;
+
+                if (checkWinner(board, row, col)) {
+                    board[row][col] = 0;
+                    return [-1000000, row, col];
+                }
+
                 let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
                 if (curScore < minScore) {
                     minScore = curScore;
@@ -354,4 +368,80 @@ function shuffle(a) {
         [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
+}
+
+
+
+function checkWinner(board, row, col) {    
+    color = board[row][col];                                               //4  2  6
+    let dirFlag = [true, true, true, true, true, true, true, true];            //0  P  1
+    let countRow = 1, countCol = 1, countDiaR = 1 , countDiaL = 1;         //7  3  5
+    for (let i = 1; i <=4; i++ ) {
+        if (dirFlag[0] == true) {
+            if (col - i < 0) {
+                dirFlag[0] = false;
+            } else {
+                if (board[row][col-i] === color) countRow++;
+                else dirFlag[0] = false;
+            }
+        }
+        if (dirFlag[1] == true) {
+            if (col + i > 14) {
+                dirFlag[1] = false;
+            } else {
+                if (board[row][col+i] === color) countRow++;
+                else dirFlag[1] = false;
+            }
+        }
+        if (dirFlag[2] == true) {
+            if (row - i < 0) {
+                dirFlag[2] = false;
+            } else {
+                if (board[row-i][col] === color) countCol++;
+                else dirFlag[2] = false;
+            }
+        }
+        if (dirFlag[3] == true) {
+            if (row + i > 14) {
+                dirFlag[3] = false;
+            } else {
+                if (board[row+i][col] === color) countCol++;
+                else dirFlag[3] = false;
+            }
+        }
+        if (dirFlag[4] == true) {
+            if (row - i < 0 || col - i < 0) {
+                dirFlag[4] = false;
+            } else {
+                if (board[row-i][col-i] === color) countDiaR++;
+                else dirFlag[4] = false;
+            }
+        }
+        if (dirFlag[5] == true) {
+            if (row + i > 14 || col + i > 14) {
+                dirFlag[5] = false;
+            } else {
+                if (board[row+i][col+i] === color) countDiaR++;
+                else dirFlag[5] = false;
+            }
+        }
+        if (dirFlag[6] == true) {
+            if (row - i < 0 || col + i > 14) {
+                dirFlag[6] = false;
+            } else {
+                if (board[row-i][col+i] === color) countDiaL++;
+                else dirFlag[6] = false;
+            }
+        }
+        if (dirFlag[7] == true) {
+            if (row + i > 14 || col - i < 0) {
+                dirFlag[7] = false;
+            } else {
+                if (board[row+i][col-i] === color) countDiaL++;
+                else dirFlag[7] = false;
+            }
+        }
+        if (countRow > 4 || countCol > 4 || countDiaL > 4 || countDiaR > 4) return true;
+    }
+        return false;
 }
