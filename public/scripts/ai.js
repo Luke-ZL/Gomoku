@@ -4,32 +4,11 @@ var boardIndexArray = [...Array(225).keys()];
 const dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
 const BLACK = 1, WHITE = -1, MAX_DEPTH = 5;
 
-var test = [ 
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,-1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,-1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,1,-1,1,0,0,0,-1,0,0,0,0],
-    [0,0,0,-1,0,0,-1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-  ]
-
-//TODO, pass in pawnCount to avoid draw in minimax
 onmessage = (event) => {
     postMessage(calculateMove(event.data.board, event.data.color, event.data.pawnCount));
 }
 
 function calculateMove(board, aiColor, pawnCount) {
-    /*console.log("heuristic score = ", heuristic(test, WHITE));*/
-    
     //shuffle the board Index array to add randomness
     shuffle(boardIndexArray);
 
@@ -54,12 +33,12 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
     if (isCpu == 1) {
         let maxScore = -Infinity;
         let bestMove = [-1, -1];
-        //let moveCount = 0;  //for debug purpose
+        let moveCount = 0;                                                              //for debug purpose
         for (let i = 0; i < 225; i++) {
             let row = Math.floor(boardIndexArray[i] / 15), col = boardIndexArray[i] % 15;
             if (board[row][col] == 0 && checkAfinity(board, row, col)) {
-                //moveCount++;
-                //if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);
+                moveCount++;                                                            //for debug purpose
+                if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);   //for debug purpose
                 board[row][col] = cpuColor;
                 let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
                 if (curScore > maxScore) {

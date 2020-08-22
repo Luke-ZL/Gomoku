@@ -1,4 +1,4 @@
-const BLACK = 1, WHITE = -1, DEBUG = 1;
+const BLACK = 1, WHITE = -1, DEBUG = 0;
 var playerColor = BLACK; //default is black
 var playerTurn = true;
 var pawnCount = 0;
@@ -29,10 +29,12 @@ $("table").on("click", "td", function(){
     let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
 
     if (playerTurn && board[row][col] == 0) {
-        console.log("Player played %d, %d", row, col);
         playerTurn = false;
         board[row][col] = playerColor;
-        console.log(board);
+        if (DEBUG) {
+            console.log("Player played %d, %d", row, col);
+            console.log(board);
+        }
         add(playerColor, $(this).attr("id"));
         pawnCount++;
         
