@@ -1,5 +1,3 @@
-//TODO check affinity first
-
 var cacheBoard = new Map();
 var cpuColor = 0;
 var boardIndexArray = [...Array(225).keys()];
@@ -45,7 +43,7 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
 
                 if (checkWinner(board, row, col)) {
                     board[row][col] = 0;
-                    return [1000000, row, col];
+                    return [10000000, row, col];
                 }
 
                 let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
@@ -69,7 +67,7 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
 
                 if (checkWinner(board, row, col)) {
                     board[row][col] = 0;
-                    return [-1000000, row, col];
+                    return [-10000000, row, col];
                 }
 
                 let curScore = alphabetaMinimax(board, depth-1, alpha, beta, -isCpu)[0];
@@ -100,7 +98,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -139,7 +137,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -180,7 +178,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -219,7 +217,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -259,7 +257,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -298,7 +296,7 @@ function heuristic(board, colorTurn) {
             if (board[i][j] != 0) {
                 if (board[i][j] == cur) {
                     curStreak++;
-                    if (curStreak > 4) return cur == BLACK ? 1000000 : -1000000;
+                    if (curStreak > 4) return cur == BLACK ? 10000000 : -10000000;
                 }
                 else {
                     if (cur != 0 && curStreak > 1 && blockedFront == false) {
@@ -345,7 +343,7 @@ function heuristic(board, colorTurn) {
 function calculateScore(isThisTurn, countArr) {
     let score = countArr[1] + 10 * countArr[0];
     if (isThisTurn) {
-        if (countArr[4] + countArr[5] > 0) return 1000000; 
+        if (countArr[4] + countArr[5] > 0) return 10000000; 
         score += countArr[3] * 2000; //close 3
         if (countArr[2] > 1) score += 200000; //more than 1 open 3 will almost guarantee a lose;
         else score += countArr[2] * 50000; //open 3

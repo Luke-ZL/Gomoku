@@ -24,6 +24,22 @@ if (DEBUG) {
     $("td").addClass("redBorder");
 }
 
+if (playerTurn) {
+    $("td").hover(function() {
+        let colorStr = playerColor == BLACK ? "blackPawn" : "whitePawn";
+        let indexArr = $(this).attr("id").split("i");
+        let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
+        if (board[row][col] == 0) $(this).addClass(colorStr + " transparentBackground");
+    }, function() {
+        let colorStr = playerColor == BLACK ? "blackPawn" : "whitePawn";
+        let indexArr = $(this).attr("id").split("i");
+        let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
+        if (board[row][col] == 0) {
+            $(this).removeClass("transparentBackground " + colorStr);
+        } 
+    });
+}
+
 reset();
 
 $("table").on("click", "td", function(){
@@ -84,8 +100,10 @@ function reset() {
 function add(color, id) {
     if (color === BLACK) {
        $("#" + id).addClass("blackPawn");  //certain id which includes ' ', '.' etc. needs to be escaped, so I use 'i' as delim
+       $("#" + id).removeClass("transparentBackground");
     } else {
         $("#" + id).addClass("whitePawn");
+        $("#" + id).removeClass("transparentBackground");
     }
 }
 

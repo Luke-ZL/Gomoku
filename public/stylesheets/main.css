@@ -29,3 +29,7 @@ body {
 .redBorder {
     border: 1px solid red;
 }
+
+.transparentBackground {
+    opacity: 0.5;
+}
