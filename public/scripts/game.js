@@ -177,6 +177,6 @@ function checkWinner(color, row, col) {                                    //4  
         }
         if (countRow > 4 || countCol > 4 || countDiaL > 4 || countDiaR > 4) return true;
     }
-    console.log("color: %d, countRow: %d, countCol: %d, countDiaL: %s, countDiaR: %d", color, countRow, countCol, countDiaL, countDiaR);
+    if (DEBUG) console.log("color: %d, countRow: %d, countCol: %d, countDiaL: %s, countDiaR: %d", color, countRow, countCol, countDiaL, countDiaR);
     return false;
 }

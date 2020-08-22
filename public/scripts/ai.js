@@ -1,5 +1,6 @@
 var cacheBoard = new Map();
 var cpuColor = 0;
+var boardIndexArray = [...Array(225).keys()];
 const dir = [[0, -1], [0, 1], [-1, 0], [1, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]];
 const BLACK = 1, WHITE = -1, MAX_DEPTH = 3;
 
@@ -34,22 +35,26 @@ function calculateMove(board, aiColor, pawnCount) {
         }
     }
     return "-1i-1";*/
+    
+    //shuffle the board Index array to add randomness
+    shuffle(boardIndexArray);
+
     cpuColor = aiColor;
     let depth = 225 - pawnCount >= MAX_DEPTH ? MAX_DEPTH : 225 - pawnCount;
 
     let maxScore = -Infinity;
     let bestMove = [-1, -1];
-    for (let i = 0; i < 15; i++) {
-        for (let j = 0; j < 15; j++) {
-            if (board[i][j] == 0 && checkAfinity(board, i, j)) {
-                board[i][j] = cpuColor;
-                let curScore = alphabetaMinimax(board, 0, -Infinity, Infinity, 1); //TODO: add depth
-                if (curScore > maxScore) {
-                    maxScore = curScore;
-                    bestMove = [i, j];
-                }
-                board[i][j] = 0;
+    for (let it = 0; it < 225; it++) {
+        let i = Math.floor(boardIndexArray[it] / 15), j = boardIndexArray[it] % 15;
+        if (board[i][j] == 0 && checkAfinity(board, i, j)) {
+
+            board[i][j] = cpuColor;
+            let curScore = alphabetaMinimax(board, 0, -Infinity, Infinity, 1); //TODO: add depth
+            if (curScore > maxScore) {
+                maxScore = curScore;
+                bestMove = [i, j];
             }
+            board[i][j] = 0;
         }
     }
     return bestMove[0] + "i" + bestMove[1];
@@ -97,7 +102,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -137,7 +141,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -179,7 +182,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -219,7 +221,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -260,7 +261,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -300,7 +300,6 @@ function heuristic(board, colorTurn) {
             } else {
                 if (cur != 0 && curStreak > 1) {
                     if (blockedFront) {
-                        console.log("j: %d", j);
                         if (cur == BLACK) blackCount[2 * (curStreak - 2) + 1]++;
                         else whiteCount[2 * (curStreak - 2) + 1]++;
                     } else {
@@ -317,12 +316,12 @@ function heuristic(board, colorTurn) {
             else whiteCount[2 * (curStreak - 2) + 1]++;
         }  
     }
-
+    /*
     console.log("heuristic begin");
     console.log(blackCount);
     console.log(whiteCount);
     console.log("heuristic end");
-
+    */
     let blackScore = calculateScore(colorTurn == BLACK, blackCount);
     let whiteScore = calculateScore(colorTurn == WHITE, whiteCount);
     let finalScore = blackScore - whiteScore;
@@ -340,4 +339,17 @@ function calculateScore(isThisTurn, countArr) {
         score += 200000 * countArr[5] + 100000 * countArr[4] + 500 * countArr[3] + 5000 * countArr[2];
     }
     return score;
+}
+
+
+//add some randomness to the AI thinking
+//https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+//I think the default iterator's iterating sequence is not modified due to it's shift in place nature
+//for in will not be shuffled
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
