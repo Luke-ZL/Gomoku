@@ -26,6 +26,6 @@ body {
     background-size: cover;
 }
 
-.debug {
+.redBorder {
     border: 1px solid red;
 }

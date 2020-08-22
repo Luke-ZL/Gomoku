@@ -332,10 +332,13 @@ function calculateScore(isThisTurn, countArr) {
     let score = countArr[1] + 10 * countArr[0];
     if (isThisTurn) {
         if (countArr[4] + countArr[5] > 0) return 1000000; 
-        score += countArr[3] * 1000; //close 3
-        score += countArr[2] * 10000; //open 3
+        score += countArr[3] * 2000; //close 3
+        if (countArr[2] > 1) score += 200000; //more than 1 open 3 will almost guarantee a lose;
+        else score += countArr[2] * 50000; //open 3
     } else {
-        score += 200000 * countArr[5] + 100000 * countArr[4] + 500 * countArr[3] + 5000 * countArr[2];
+        score += 200000 * countArr[4] + 10000 * countArr[5] + 1000 * countArr[3];
+        if (countArr[2] > 1) score += 100000;
+        else score += 10000 * countArr[2];
     }
     return score;
 }

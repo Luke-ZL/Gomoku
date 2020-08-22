@@ -21,8 +21,10 @@ var board = [
   ]
 
 if (DEBUG) {
-    $("td").addClass("debug");
+    $("td").addClass("redBorder");
 }
+
+reset();
 
 $("table").on("click", "td", function(){
     let indexArr = $(this).attr("id").split("i");
@@ -60,6 +62,7 @@ $(".resetBtn").on("click", function() {
 
 function reset() {
     $("td").removeClass("blackPawn whitePawn");
+    $("td").removeClass("redBorder");
     for(let i in board) {
         for(let j in board) {
             board[i][j] = 0;
@@ -68,9 +71,14 @@ function reset() {
     if (playerColor === WHITE) {
         add(BLACK, "7i7");
         board[7][7] = BLACK;
+
+        //update UI
+        $("#7i7").addClass("redBorder");
     }
     playerTurn = true;
     pawnCount = 0;
+    let colorStr = playerColor == BLACK ? "You are playing as black." : "Master played (7, 7)";
+    $("#topInfo").text(colorStr);
 }
 
 function add(color, id) {
@@ -82,6 +90,9 @@ function add(color, id) {
 }
 
 function aiMove() {
+    //update UI
+    $("#topInfo").text("Good job! Master is thinking HARD...");
+
     var worker = new Worker("../scripts/ai.js");
 
     worker.onmessage = function(event) {
@@ -89,6 +100,13 @@ function aiMove() {
         add(-playerColor, event.data);
         let indexArr = event.data.split("i");
         let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
+
+        //update UI
+        $("#topInfo").text("Master played (" + row + ", " + col + ").");
+        $("td").removeClass("redBorder");
+        $("#" + event.data).addClass("redBorder");
+
+
         board[row][col] = -playerColor;
         if (checkWinner(-playerColor, row, col)) {
             alert("You LOOSE! Oops!");
