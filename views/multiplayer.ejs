@@ -9,7 +9,31 @@
             <div class="d-flex justify-content-center mt-3">
                 <button type="button" class="btn btn-success mt-auto" onclick="connect()">Let's play!</button>
             </div>
-        </form>   
+        </form> 
+        <div class="d-none mr-5 mt-5" id="leftPlayerInfo">
+            <p>Player ID: <span id="Lid">NULL</span> </p>
+            <p>Player Color: <span id="Lcolor">NULL</span></p>
+        </div>
+
+        <div class="d-none mb-5" id="board">
+            <p class="mx-auto mb-2 text-center" id="topInfo">room ID: <span id="roomId">NULL</span></p>
+            <div class="d-flex justify-content-center">
+                <table background="assets/board.png" class="block">    
+                    <% for (let i = 0; i < 15; i++) {%>
+                        <tr id="<%= i %>">
+                        <% for (let j = 0; j < 15; j++) {%>
+                            <td id="<%= i %>i<%= j %>"></td>
+                        <% } %>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+        </div> 
+        
+        <div class="d-none ml-5 mt-5" id="rightPlayerInfo">
+            <p>Player ID: <span id="Rid">NULL</span></p>
+            <p>Player Color: <span id="Rcolor">NULL</span></p>
+        </div>
     </div>
 </div>
 <%- include('foot') %>

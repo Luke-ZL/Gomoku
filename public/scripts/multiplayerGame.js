@@ -17,12 +17,30 @@ $(document).ready(function () {
 
 var socket = io();
 var roomId;
+var playerId = "null";
+var playerColor = 0;
+var board = [ 
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  ]
+const BLACK = 1, WHITE = -1;
 
 var connect = function() {
     roomId = parseInt($("#selectRoomInput").val());
-    console.log($("#selectRoomInput").val());
     if (roomId < 100 && roomId >= 0) {
-        $("#selectRoomForm").addClass("d-none");
         socket.emit("join", roomId);
     }
 }
@@ -41,8 +59,31 @@ on the client.
 https://stackoverflow.com/questions/30284224/node-js-socket-io-redirect-user-to-other-page-after-joining-a-room
 */
 
-socket.on("game", function(msg) {
-    if (roomId == msg) $("#selectRoomForm").remove();
+socket.on("game", function(msg) { //[pid, playerCount, playerColor, roomId]
+    console.log(msg);
+    if (roomId == msg[3]) {
+        $("#selectRoomForm").remove();
+        $("#board").removeClass("d-none");
+        $("#leftPlayerInfo").removeClass("d-none");
+        $("#rightPlayerInfo").removeClass("d-none");
+        let colorStr = msg[2] == BLACK ? "black" : "white";
+        if (playerId == "null") {
+            playerId = msg[0][msg[1]-1];
+            playerColor = msg[2];
+            $("#roomId").text(msg[3].toString());
+            $("#Lid").text(playerId);
+            $("#Lcolor").text(colorStr);
+            if (msg[1] == 2) {
+                $("#Rid").text(msg[0][0]);
+                colorStr = msg[2] == BLACK ? "white" : "black" ;
+                $("#Rcolor").text(colorStr);
+            }
+        } else {
+            $("#Rid").text(msg[0][1]);
+            $("#Rcolor").text(colorStr);
+        }
+    }
+
 });
 
 

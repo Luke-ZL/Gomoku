@@ -8,7 +8,7 @@ app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
-
+const BLACK = 1, WHITE = -1;
 var games = Array(100);
 for (let i = 0; i < 100; i++) {
     games[i] = {
@@ -25,6 +25,11 @@ io.on("connect", function(socket){
         if (games[roomId].playerCount < 2) {
             games[roomId].playerCount++;
             games[roomId].pid[games[roomId].playerCount - 1] = playerId;
+            playerColor = games[roomId].playerCount % 2 == 1 ? BLACK : WHITE;
+            socket.join(roomId.toString());
+            io.to(roomId.toString()).emit("game", [games[roomId].pid, games[roomId].playerCount, playerColor, roomId]);
+            //socket.emit("game", [games[roomId].pid, games[roomId].playerCount, playerColor, roomId]);
+            //socket.broadcast.emit("game", [games[roomId].pid, games[roomId].playerCount, playerColor, roomId]);
         } else {
             socket.emit("full", roomId);
             return;
