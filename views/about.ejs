@@ -1,3 +1,24 @@
 <%- include('header') %>
-<p>About</p>
+<div class="container mt-5 aboutBg w-50 rounded">
+    <div class="row justify-content-center">
+        <h2 class ="col-10 text-center text-light mt-3">About this project</h2>
+        <div class="row justify-content-center">
+            <div class ="col-10 text-light my-3">
+                <p>
+                    This is a Web based Gomoku Game with a Alpha Beta Minimax AI and a multiplier mode.
+                </p>
+                <p>
+                    Frontend uses jQuery and Bootstrap4.
+                    Backend uses express framework. Single player uses AlphaBeta Minimax 
+                    algotithm with a depth of 5 (including leaf nodes) for a almost 
+                    instant response (a smooth gameplay can use up to 6). I also use web 
+                    worker to achieve an asynchronous thinking (without blocking the UI). 
+                    Multiplayer mode is powered by socket.io. If you are intereted in how 
+                    this is done, you are more than welcome to view the source code at my
+                    <a href="https://github.com/Luke-ZL/Gomoku">Github</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 <%- include('foot') %>

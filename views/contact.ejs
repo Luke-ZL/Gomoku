@@ -1,3 +1,22 @@
 <%- include('header') %>
-<p>Contact</p>
+<div class="container mt-5 aboutBg w-50 rounded">
+    <div class="row justify-content-center">
+        <h2 class ="col-10 text-center text-success mt-3">Have questions?</h2>
+        <div class="row justify-content-center">
+            <div class ="text-light my-3">
+                <p>
+                    Please don't hesitate to hit the button below!
+                </p>
+                <p class="text-center mt-4">
+                    <button type="button" class="btn btn-success mt-auto" id="contactButton">Contact</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#contactButton").click(function() {
+        window.open('mailto:luzixuanaa@gmail.com');
+    });
+</script>
 <%- include('foot') %>

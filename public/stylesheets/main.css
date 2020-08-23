@@ -33,3 +33,7 @@ body {
 .transparentBackground {
     opacity: 0.5;
 }
+
+.aboutBg {
+    background-color: rgb(11, 102, 122);
+}
