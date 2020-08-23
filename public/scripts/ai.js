@@ -372,7 +372,7 @@ function shuffle(a) {
 
 function checkWinner(board, row, col) {    
     color = board[row][col];                                               //4  2  6
-    let dirFlag = [true, true, true, true, true, true, true, true];            //0  P  1
+    let dirFlag = [true, true, true, true, true, true, true, true];        //0  P  1
     let countRow = 1, countCol = 1, countDiaR = 1 , countDiaL = 1;         //7  3  5
     for (let i = 1; i <=4; i++ ) {
         if (dirFlag[0] == true) {

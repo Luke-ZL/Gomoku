@@ -36,6 +36,10 @@ io.on("connect", function(socket){
         }
     });
 
+    socket.on("tryMove", function(msg) { //[roomId, playerColor, row, col]
+        io.to(msg[0].toString()).emit("applyMove", [msg[1], msg[2], msg[3]]);
+    });
+
     socket.on("disconnect", function() {
         for (let i = 0; i< 100; i++) {
             if (games[i].pid[0] == playerId || games[i].pid[1] == playerId) {
