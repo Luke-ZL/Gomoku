@@ -1,5 +1,5 @@
 # Gomoku
- A Web based Gomoku Game with a Alpha Beta Minimax AI and a multiplier mode.
+ A Web based Gomoku Game with a Alpha Beta Minimax AI and a multiplayer mode.
 
  Frontend uses jQuery and Bootstrap4.
 
