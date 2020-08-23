@@ -17,8 +17,11 @@ $(document).ready(function () {
 
 var socket = io();
 var roomId;
+const BLACK = 1, WHITE = -1;
 var playerId = "null";
 var playerColor = 0;
+var playerTurn = BLACK;
+var gameStart = false;
 var board = [ 
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -36,7 +39,32 @@ var board = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   ]
-const BLACK = 1, WHITE = -1;
+
+function reset() {
+    playerColor = BLACK;
+    playerTurn = BLACK;
+    gameStart = false;
+    board = [ 
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ]
+    $("#Rid").text("NULL");
+    $("#Rcolor").text("NULL");
+    $("#Lcolor").text("black");
+}
 
 var connect = function() {
     roomId = parseInt($("#selectRoomInput").val());
@@ -83,7 +111,10 @@ socket.on("game", function(msg) { //[pid, playerCount, playerColor, roomId]
             $("#Rcolor").text(colorStr);
         }
     }
+});
 
+socket.on("enemyLeave", function(){
+    reset();
 });
 
 

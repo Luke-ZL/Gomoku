@@ -41,6 +41,8 @@ io.on("connect", function(socket){
             if (games[i].pid[0] == playerId || games[i].pid[1] == playerId) {
                 games[i].playerCount--;
                 games[i].pid[0] = games[i].pid[0] == playerId ? games[i].pid[1] : games[i].pid[0];
+                io.to(i.toString()).emit("enemyLeave");
+                break;
             }
         }
 
