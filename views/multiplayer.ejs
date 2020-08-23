@@ -5,7 +5,7 @@
     <div class="row pt-5 justify-content-center">
         <form id="selectRoomForm">
             <label>Please enter a room number [0-99]</label>
-            <input type="number" class="form-control" id="selectRoomInput" placeholder="99" required>
+            <input type="number" class="form-control" id="selectRoomInput" placeholder="99" min="0" max="99" required>
             <div class="d-flex justify-content-center mt-3">
                 <button type="button" class="btn btn-success mt-auto" onclick="connect()">Let's play!</button>
             </div>

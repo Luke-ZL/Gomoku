@@ -51,9 +51,12 @@ function reset(color) {
             board[i][j] = 0;
         }
     }
-    $("#Rid").text("NULL");
-    $("#Rcolor").text("NULL");
-    $("#Lcolor").text("black");
+
+    let colorStr = playerColor == BLACK ? "black" : "white";
+    $("#Lcolor").text(colorStr);
+    colorStr = playerColor == BLACK ? "white" : "black";
+    $("#Rcolor").text(colorStr);
+
     $("td").removeClass("blackPawn");
     $("td").removeClass("whitePawn");
     $("td").removeClass("redBorder");
@@ -124,13 +127,12 @@ socket.on("applyMove", function(msg){ //[playerColor, row, col]]
     if (checkWinner(row, col)) {
         if (thisColor == playerColor) {
             alert("You WIN! Congrats!");
-            reset(-playerColor);
-            gameReady();
         } else {
             alert("You LOOSE! Oops!");
-            reset(-playerColor);
-            gameReady();
         }
+        reset(-playerColor);
+        gameReady();
+        return;
     } else {
         if (pawnCount >= 225) {
             alert("Oops, it's a draw.");
@@ -143,6 +145,9 @@ socket.on("applyMove", function(msg){ //[playerColor, row, col]]
 
 socket.on("enemyLeave", function(){
     reset(BLACK);
+    $("#Rid").text("NULL");
+    $("#Rcolor").text("NULL");
+
 });
 
 
@@ -150,7 +155,7 @@ socket.on("enemyLeave", function(){
 function gameReady() {
     gameStart = true;
     $("table").on("click", "td", function(){
-        console.log([playerId, playerColor, playerTurn, gameStart]);
+        //console.log([playerId, playerColor, playerTurn, gameStart]);
         let indexArr = $(this).attr("id").split("i");
         let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
     
@@ -161,13 +166,13 @@ function gameReady() {
     });
 
     $("td").hover(function() {
-        if (playerTurn != playerColor) return;
+        if (playerTurn != playerColor || !gameStart) return;
         let colorStr = playerColor == BLACK ? "blackPawn" : "whitePawn";
         let indexArr = $(this).attr("id").split("i");
         let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);
         if (board[row][col] == 0) $(this).addClass(colorStr + " transparentBackground");
     }, function() {
-        if (playerTurn != playerColor) return;
+        if (playerTurn != playerColor || !gameStart) return;
         let colorStr = playerColor == BLACK ? "blackPawn" : "whitePawn";
         let indexArr = $(this).attr("id").split("i");
         let row = parseInt(indexArr[0], 10), col = parseInt(indexArr[1], 10);

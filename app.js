@@ -73,6 +73,16 @@ app.get("/full", function(req, res) {
     res.render("full");
 });
 
+app.get("/about", function(req, res) {
+    res.render("about");
+});
+
+app.get("/contact", function(req, res) {
+    res.render("contact");
+});
+
+
+
 server.listen(port);
 console.log("... server starts in port 3001");
 
