@@ -33,12 +33,12 @@ function alphabetaMinimax(board, depth, alpha, beta, isCpu) {  //isCpu : 1; notC
     if (isCpu == 1) {
         let maxScore = -Infinity;
         let bestMove = [-1, -1];
-        let moveCount = 0;                                                              //for debug purpose
+        //let moveCount = 0;                                                              //for debug purpose
         for (let i = 0; i < 225; i++) {
             let row = Math.floor(boardIndexArray[i] / 15), col = boardIndexArray[i] % 15;
             if (board[row][col] == 0 && checkAfinity(board, row, col)) {
-                moveCount++;                                                            //for debug purpose
-                if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);   //for debug purpose
+                //moveCount++;                                                            //for debug purpose
+                //if (depth == MAX_DEPTH) console.log("checking %d move: ", moveCount);   //for debug purpose
                 board[row][col] = cpuColor;
 
                 if (checkWinner(board, row, col)) {

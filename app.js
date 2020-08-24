@@ -19,7 +19,7 @@ for (let i = 0; i < 100; i++) {
 
 io.on("connect", function(socket){
     var playerId = Math.floor(Date.now() / 1000).toString() + Math.floor(Math.random() * 100);
-    console.log(playerId + " connected.");
+    //console.log(playerId + " connected.");
 
     socket.on("join", function(roomId) {
         if (games[roomId].playerCount < 2) {
@@ -50,7 +50,7 @@ io.on("connect", function(socket){
             }
         }
 
-        console.log(playerId + " disconnected.")
+        //console.log(playerId + " disconnected.")
     });
 });
 
@@ -84,7 +84,7 @@ app.get("/contact", function(req, res) {
 
 
 server.listen(port);
-console.log("... server starts in port 3001");
+//console.log("... server starts in port 3001");
 
 // app.listen(3001, 'localhost', function() {
 //     console.log("... server starts in port 3001");
