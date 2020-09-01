@@ -11,7 +11,7 @@
 ## Components
 [views](https://github.com/Luke-ZL/Gomoku/tree/master/views) contains all the Embedded JavaScript templates(.ejs) files that are used in this project. All pages use the same header template header.ejs which contains the common NavBar, and the same foot template foot.ejs.
 
-[public](https://github.com/Luke-ZL/Gomoku/tree/master/public) contains all the [assets](https://github.com/Luke-ZL/Gomoku/tree/master/public/assets), [scripts](https://github.com/Luke-ZL/Gomoku/tree/master/public/assets) and [stylesheets](https://github.com/Luke-ZL/Gomoku/tree/master/public/stylesheets) used in the project.
+[public](https://github.com/Luke-ZL/Gomoku/tree/master/public) contains all the [assets](https://github.com/Luke-ZL/Gomoku/tree/master/public/assets), [scripts](https://github.com/Luke-ZL/Gomoku/tree/master/public/scripts) and [stylesheets](https://github.com/Luke-ZL/Gomoku/tree/master/public/stylesheets) used in the project.
 
 [node_modules](https://github.com/Luke-ZL/Gomoku/tree/master/node_modules) contains express framework and socket.io library that are used in this project.
 
